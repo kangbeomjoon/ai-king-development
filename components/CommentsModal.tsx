@@ -10,22 +10,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-
-interface IComment {
-  id: string;
-  content: string;
-  userName: string;
-  userProfile: string;
-  createdAt: string;
-}
-
-interface CommentsModalProps {
-  postId: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  initialComments?: IComment[];
-  onCommentAdded?: () => void;
-}
+import { IComment, ICommentsModalProps } from "@/types";
 
 const CommentsModal = ({
   postId,
@@ -33,7 +18,7 @@ const CommentsModal = ({
   onOpenChange,
   initialComments = [],
   onCommentAdded,
-}: CommentsModalProps) => {
+}: ICommentsModalProps) => {
   const [comments, setComments] = useState<IComment[]>([]);
   const [newComment, setNewComment] = useState("");
 
@@ -50,6 +35,7 @@ const CommentsModal = ({
     // 실제로는 API를 호출하여 댓글을 저장하지만, 여기서는 목업 데이터로 처리
     const newCommentObj: IComment = {
       id: `${postId}-comment-${Date.now()}`,
+      postId: postId,
       content: newComment,
       userName: "현재 사용자",
       userProfile: "https://i.pravatar.cc/150?u=currentuser",

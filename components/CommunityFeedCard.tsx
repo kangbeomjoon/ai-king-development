@@ -7,23 +7,11 @@ import { Heart, MessageCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import CommentsModal from "./CommentsModal";
 import { getMockComments } from "@/lib/mockData";
-
-export interface IFeedItem {
-  postId: string;
-  imageURL: string;
-  userName: string;
-  likes: number;
-  comments: number;
-  isLiked?: boolean;
-}
-
-interface CommunityFeedCardProps {
-  feedItem: IFeedItem;
-}
+import { IComment, IFeedItem, ICommunityFeedCardProps } from "@/types";
 
 export function CommunityFeedCard({
   feedItem: initialFeedItem,
-}: CommunityFeedCardProps) {
+}: ICommunityFeedCardProps) {
   const [feedItem, setFeedItem] = useState<IFeedItem>({
     ...initialFeedItem,
     isLiked: initialFeedItem.isLiked || false,
@@ -32,7 +20,7 @@ export function CommunityFeedCard({
   const [commentCount, setCommentCount] = useState(initialFeedItem.comments);
 
   // 기본 댓글 데이터 로드
-  const [initialComments, setInitialComments] = useState([]);
+  const [initialComments, setInitialComments] = useState<IComment[]>([]);
 
   useEffect(() => {
     const mockComments = getMockComments(feedItem.postId);

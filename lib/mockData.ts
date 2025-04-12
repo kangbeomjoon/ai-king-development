@@ -1,4 +1,4 @@
-import { IFeedItem } from "@/components/CommunityFeedCard";
+import { IFeedItem, IComment } from "@/types";
 
 // 커뮤니티 피드 목업 데이터
 export const mockFeedData: IFeedItem[] = [
@@ -86,10 +86,11 @@ export function getMockPostDetail(postId: string) {
 }
 
 // 댓글 목업 데이터
-export function getMockComments(postId: string) {
+export function getMockComments(postId: string): IComment[] {
   return [
     {
       id: `${postId}-comment-1`,
+      postId: postId,
       content:
         "멋진 작품이네요! 어떤 프롬프트를 사용하셨는지 공유해주실 수 있나요?",
       userName: "호기심많은질문자",
@@ -98,6 +99,7 @@ export function getMockComments(postId: string) {
     },
     {
       id: `${postId}-comment-2`,
+      postId: postId,
       content:
         "색감이 정말 아름답습니다. 저도 비슷한 작품을 만들어보고 싶어요!",
       userName: "색감러버",
@@ -106,6 +108,7 @@ export function getMockComments(postId: string) {
     },
     {
       id: `${postId}-comment-3`,
+      postId: postId,
       content: "와우! 정말 환상적인 이미지네요. 디테일이 놀랍습니다.",
       userName: "감탄하는팬",
       userProfile: "https://i.pravatar.cc/150?u=amazedfan",
