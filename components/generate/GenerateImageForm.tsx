@@ -12,8 +12,6 @@ import { IStyleOptions } from "@/types";
 const DEFAULT_STYLE_OPTIONS: IStyleOptions = {
   artStyle: "디지털아트",
   colorTone: "밝은",
-  detailLevel: 5,
-  mood: "중립적",
 };
 
 export function GenerateImageForm() {
@@ -92,6 +90,7 @@ export function GenerateImageForm() {
         onGenerate={handleGenerate}
         isGenerating={isGenerating}
         generatedImageUrl={generatedImageUrl}
+        isPromptEmpty={!prompt.trim()}
       />
 
       {generatedImageUrl && !isGenerating && (

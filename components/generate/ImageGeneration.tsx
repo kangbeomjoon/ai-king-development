@@ -8,10 +8,15 @@ export function ImageGeneration({
   onGenerate,
   isGenerating,
   generatedImageUrl,
+  isPromptEmpty,
 }: IImageGenerationProps) {
   return (
     <div className="space-y-4">
-      <Button onClick={onGenerate} disabled={isGenerating} className="w-full">
+      <Button
+        onClick={onGenerate}
+        disabled={isGenerating || isPromptEmpty}
+        className="w-full"
+      >
         {isGenerating ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -31,6 +36,7 @@ export function ImageGeneration({
             alt="Generated image"
             fill
             className="object-contain"
+            priority
           />
         </div>
       )}

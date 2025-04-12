@@ -5,7 +5,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { IStyleOptions, IStyleOptionsProps } from "@/types";
 
 export function StyleOptions({ options, onChange }: IStyleOptionsProps) {
@@ -56,61 +55,6 @@ export function StyleOptions({ options, onChange }: IStyleOptionsProps) {
               <SelectItem value="흑백">흑백</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">
-          디테일 레벨 (낮음-높음): {options.detailLevel}
-        </label>
-        <Slider
-          value={[options.detailLevel]}
-          min={1}
-          max={10}
-          step={1}
-          onValueChange={(value: number[]) =>
-            handleChange("detailLevel", value[0])
-          }
-          className="py-4"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">분위기</label>
-        <div className="flex gap-4 mt-2">
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="mood"
-              value="따뜻한"
-              checked={options.mood === "따뜻한"}
-              onChange={(e) => handleChange("mood", e.target.value)}
-              className="h-4 w-4 text-primary rounded-full"
-            />
-            <span>따뜻한</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="mood"
-              value="차가운"
-              checked={options.mood === "차가운"}
-              onChange={(e) => handleChange("mood", e.target.value)}
-              className="h-4 w-4 text-primary rounded-full"
-            />
-            <span>차가운</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="mood"
-              value="중립적"
-              checked={options.mood === "중립적"}
-              onChange={(e) => handleChange("mood", e.target.value)}
-              className="h-4 w-4 text-primary rounded-full"
-            />
-            <span>중립적</span>
-          </label>
         </div>
       </div>
     </div>

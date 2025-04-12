@@ -47,6 +47,7 @@ export interface IImageGenerationProps {
   onGenerate: () => void;
   isGenerating: boolean;
   generatedImageUrl: string;
+  isPromptEmpty: boolean;
 }
 
 // GeneratedImageActions props interface
@@ -59,6 +60,4 @@ export interface IGeneratedImageActionsProps {
 export interface IStyleOptions {
   artStyle: string;
   colorTone: string;
-  detailLevel: number;
-  mood: string;
 }
