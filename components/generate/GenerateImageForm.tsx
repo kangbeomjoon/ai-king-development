@@ -27,8 +27,12 @@ export function GenerateImageForm() {
   // URL의 프롬프트 파라미터를 읽어와 초기값으로 설정
   useEffect(() => {
     const urlPrompt = searchParams.get("prompt");
+    console.log("URL 프롬프트 파라미터:", urlPrompt);
+
     if (urlPrompt) {
-      setPrompt(decodeURIComponent(urlPrompt));
+      const decodedPrompt = decodeURIComponent(urlPrompt);
+      console.log("디코딩된 프롬프트:", decodedPrompt);
+      setPrompt(decodedPrompt);
     }
   }, [searchParams]);
 
