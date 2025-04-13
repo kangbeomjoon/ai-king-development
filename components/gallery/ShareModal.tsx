@@ -1,6 +1,11 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { IGalleryImage, IShareModalProps } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,9 +24,24 @@ export function ShareModal({ image, isOpen, onClose }: IShareModalProps) {
   const router = useRouter();
 
   const addTag = () => {
-    if (newTag && !tags.includes(newTag)) {
-      setTags([...tags, newTag]);
+    const trimmedTag = newTag.trim();
+    if (trimmedTag && !tags.includes(trimmedTag)) {
+      setTags([...tags, trimmedTag]);
       setNewTag("");
+    }
+  };
+
+  // Enter 키 처리를 위한 별도 함수
+  const handleEnterKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      const trimmedTag = newTag.trim();
+      if (trimmedTag && !tags.includes(trimmedTag)) {
+        setTags([...tags, trimmedTag]);
+        setNewTag("");
+      }
+      return false;
     }
   };
 
@@ -69,9 +89,12 @@ export function ShareModal({ image, isOpen, onClose }: IShareModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">커뮤니티에 공유하기</h2>
+        <DialogTitle>커뮤니티에 공유하기</DialogTitle>
+        <DialogDescription>
+          이 이미지를 커뮤니티에 공유하기 위한 정보를 입력해주세요.
+        </DialogDescription>
 
+        <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium">
               제목 <span className="text-red-500">*</span>
@@ -117,9 +140,18 @@ export function ShareModal({ image, isOpen, onClose }: IShareModalProps) {
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 placeholder="새 태그 추가"
-                onKeyDown={(e) => e.key === "Enter" && addTag()}
+                onKeyDown={handleEnterKey}
+                form="no-form"
               />
-              <Button onClick={addTag}>추가</Button>
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  addTag();
+                }}
+              >
+                추가
+              </Button>
             </div>
           </div>
 

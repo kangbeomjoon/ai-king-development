@@ -1,6 +1,11 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { IGalleryImage, IImageDetailModalProps } from "@/types";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -22,9 +27,24 @@ export function ImageDetailModal({
   const { toast } = useToast();
 
   const addTag = () => {
-    if (newTag && !tags.includes(newTag)) {
-      setTags([...tags, newTag]);
+    const trimmedTag = newTag.trim();
+    if (trimmedTag && !tags.includes(trimmedTag)) {
+      setTags([...tags, trimmedTag]);
       setNewTag("");
+    }
+  };
+
+  // Enter 키 처리를 위한 별도 함수
+  const handleEnterKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      const trimmedTag = newTag.trim();
+      if (trimmedTag && !tags.includes(trimmedTag)) {
+        setTags([...tags, trimmedTag]);
+        setNewTag("");
+      }
+      return false;
     }
   };
 
@@ -53,6 +73,11 @@ export function ImageDetailModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl">
+        <DialogTitle>이미지 상세 정보</DialogTitle>
+        <DialogDescription>
+          이미지의 상세 정보를 확인하고 수정할 수 있습니다.
+        </DialogDescription>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 이미지 섹션 */}
           <div className="relative aspect-square">
@@ -122,9 +147,18 @@ export function ImageDetailModal({
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   placeholder="새 태그 추가"
-                  onKeyDown={(e) => e.key === "Enter" && addTag()}
+                  onKeyDown={handleEnterKey}
+                  form="no-form"
                 />
-                <Button onClick={addTag}>추가</Button>
+                <Button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addTag();
+                  }}
+                >
+                  추가
+                </Button>
               </div>
             </div>
 
