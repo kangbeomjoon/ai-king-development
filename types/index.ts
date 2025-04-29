@@ -87,8 +87,10 @@ export interface IGalleryImage {
         artStyle: string
         colorTone: string
     }
+    categories: string[]
     tags: string[]
     isPublic: boolean
+    order: number
     createdAt: string
     updatedAt: string
 }
