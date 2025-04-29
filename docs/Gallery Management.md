@@ -105,17 +105,19 @@
   1. **이미지 목록 조회**
      - **HTTP 메서드**: `GET`
      - **쿼리 파라미터**:
-       ```typescript
-       interface IGalleryQuery {
-           page: number
-           limit: number
-           category?: string
-           startDate?: string
-           endDate?: string
-           sortBy?: 'latest' | 'oldest' | 'name'
-           isPublic?: boolean
-       }
-       ```
+        ```typescript
+        interface IGalleryQuery {
+            page: number
+            limit: number
+            artStyle?: string
+            colorTone?: string
+            startDate?: string
+            endDate?: string
+            sortBy?: 'latest' | 'oldest'
+            isPublic?: boolean
+            tags?: string[]
+        }
+        ```
      - **응답 데이터**:
        ```typescript
        interface IGalleryResponse {
@@ -142,6 +144,9 @@
      - **요청 데이터**:
        ```typescript
        interface IUpdateImageRequest {
+           prompt?: string
+           artStyle?: string
+           colorTone?: string
            tags?: string[]
            isPublic?: boolean
        }
@@ -181,18 +186,14 @@
 ```typescript
 // GalleryImage 테이블
 {
-  id: string
+  id: number
   userId: string
-  imageUrl: string
+  filePath: string
   prompt: string
-  styleOptions: {
-    artStyle: string
-    colorTone: string
-  }
-  categories: string[]
+  artStyle: string
+  colorTone: string
   tags: string[]
   isPublic: boolean
-  order: number
   createdAt: string
   updatedAt: string
 }

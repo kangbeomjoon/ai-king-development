@@ -32,7 +32,7 @@ export function GalleryCard({
                     onClick={onImageClick}
                 >
                     <Image
-                        src={image.imageUrl}
+                        src={image.filePath}
                         alt={image.prompt}
                         fill
                         className="object-cover"
@@ -81,12 +81,22 @@ export function GalleryCard({
                         </span>
                     </div>
                     <div className="flex flex-wrap gap-1">
-                        {image.categories.map(category => (
+                        <span
+                            className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
+                        >
+                            {image.artStyle}
+                        </span>
+                        <span
+                            className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded"
+                        >
+                            {image.colorTone}
+                        </span>
+                        {image.tags.map(tag => (
                             <span
-                                key={category}
-                                className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
+                                key={tag}
+                                className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded"
                             >
-                                {category}
+                                {tag}
                             </span>
                         ))}
                     </div>
@@ -112,7 +122,7 @@ export function GalleryCard({
                         <AlertDialogCancel>취소</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={() => {
-                                onDelete(image.id)
+                                onDelete(String(image.id))
                                 setShowDeleteAlert(false)
                             }}
                             className="bg-red-500 hover:bg-red-600"

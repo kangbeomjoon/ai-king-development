@@ -4,10 +4,12 @@ import { IGalleryImage } from '@/types'
 import { DateRange } from 'react-day-picker'
 
 interface FilterOptions {
-    category: string
+    artStyle: string
+    colorTone: string
     dateRange?: DateRange
     sortBy: string
     visibility: string
+    tags?: string[]
 }
 
 interface GalleryStore {
@@ -21,10 +23,12 @@ interface GalleryStore {
 }
 
 const defaultFilters: FilterOptions = {
-    category: 'all',
+    artStyle: 'all',
+    colorTone: 'all',
     dateRange: undefined,
     sortBy: 'latest',
-    visibility: 'all'
+    visibility: 'all',
+    tags: undefined
 }
 
 export const useGalleryStore = create<GalleryStore>((set, get) => ({
@@ -34,7 +38,7 @@ export const useGalleryStore = create<GalleryStore>((set, get) => ({
 
     deleteImage: (imageId: string) =>
         set(state => {
-            const updatedImages = state.images.filter(img => img.id !== imageId)
+            const updatedImages = state.images.filter(img => img.id.toString() !== imageId)
             return {
                 images: updatedImages,
                 filteredImages: applyFilters(updatedImages, state.filters)
@@ -69,10 +73,24 @@ function applyFilters(
 ): IGalleryImage[] {
     let filtered = [...images]
 
-    // 카테고리 필터
-    if (filters.category !== 'all') {
+    // 아트 스타일 필터
+    if (filters.artStyle !== 'all') {
         filtered = filtered.filter(img =>
-            img.categories.includes(filters.category)
+            img.artStyle === filters.artStyle
+        )
+    }
+
+    // 컬러 톤 필터
+    if (filters.colorTone !== 'all') {
+        filtered = filtered.filter(img =>
+            img.colorTone === filters.colorTone
+        )
+    }
+
+    // 태그 필터
+    if (filters.tags && filters.tags.length > 0) {
+        filtered = filtered.filter(img =>
+            filters.tags!.some(tag => img.tags.includes(tag))
         )
     }
 
@@ -101,8 +119,6 @@ function applyFilters(
                     new Date(a.createdAt).getTime() -
                     new Date(b.createdAt).getTime()
                 )
-            case 'name':
-                return a.prompt.localeCompare(b.prompt)
             case 'latest':
             default:
                 return (

@@ -80,18 +80,14 @@ export interface IStyleOptions {
 }
 
 export interface IGalleryImage {
-  id: string;
+  id: number;
   userId: string;
-  imageUrl: string;
+  filePath: string;
   prompt: string;
-  styleOptions: {
-    artStyle: string;
-    colorTone: string;
-  };
-  categories: string[];
+  artStyle: string;
+  colorTone: string;
   tags: string[];
   isPublic: boolean;
-  order: number;
   createdAt: string;
   updatedAt: string;
 }
