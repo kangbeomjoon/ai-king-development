@@ -14,6 +14,10 @@ const config = {
             {
                 protocol: 'https',
                 hostname: 'jgvktppjdbligdhehesn.supabase.co'
+            },
+            {
+                protocol: 'https',
+                hostname: 'ttfdxaxmsjrvvwekoooe.supabase.co'
             }
         ]
     }

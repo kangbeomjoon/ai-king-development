@@ -3,6 +3,12 @@ import { auth } from "@clerk/nextjs/server";
 
 // Supabase 클라이언트 생성 함수
 export const createSupabaseClient = async () => {
+  const clerkAuth = await auth();
+  // 'supabase' 템플릿을 사용하여 JWT 토큰 가져오기
+  const clerkToken = await clerkAuth.getToken({
+    template: "supabase",
+  });
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -28,17 +34,20 @@ export const createSupabaseClient = async () => {
 
   try {
     // Supabase 클라이언트 생성
-    const client = createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: false, // 서버 사이드에서는 세션 유지 필요 없음
-      },
-      // 기본 익명 인증 사용
-      // global: {
-      //   headers: {
-      //     "x-clerk-user-id": userId || "",
-      //   },
-      // },
-    });
+    const client = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      supabaseKey,
+      {
+        auth: {
+          persistSession: false, // 서버 사이드에서는 세션 유지 필요 없음
+        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${clerkToken}`,
+          },
+        },
+      }
+    );
 
     return client;
   } catch (error) {
