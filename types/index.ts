@@ -79,18 +79,14 @@ export interface IStyleOptions {
 }
 
 export interface IGalleryImage {
-    id: string
+    id: number
     userId: string
-    imageUrl: string
+    filePath: string
     prompt: string
-    styleOptions: {
-        artStyle: string
-        colorTone: string
-    }
-    categories: string[]
+    artStyle: string
+    colorTone: string
     tags: string[]
     isPublic: boolean
-    order: number
     createdAt: string
     updatedAt: string
 }
@@ -103,7 +99,7 @@ export interface IGalleryCardProps {
     image: IGalleryImage
     onImageClick: () => void
     onShareClick: () => void
-    onDelete: (imageId: string) => void
+    onDelete: (imageId: number) => void
 }
 
 // ImageDetailModal props interface
@@ -159,7 +155,7 @@ export interface IGalleryQuery {
     startDate?: string
     endDate?: string
     sortBy?: 'latest' | 'oldest'
-    isPublic?: boolean
+    tags?: string[]
 }
 
 export interface IGalleryResponse {
@@ -170,6 +166,9 @@ export interface IGalleryResponse {
 
 export interface IUpdateImageRequest {
     tags?: string[]
+    prompt?: string
+    artStyle?: string
+    colorTone?: string
     isPublic?: boolean
 }
 

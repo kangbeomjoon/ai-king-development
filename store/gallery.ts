@@ -23,11 +23,14 @@ interface GalleryStore {
     // Actions
     fetchImages: () => Promise<void>
     loadMoreImages: () => Promise<void>
-    deleteImage: (imageId: string) => Promise<void>
+    deleteImage: (imageId: number) => Promise<void>
     updateImage: (
-        imageId: string,
+        imageId: number,
         tags: string[],
-        isPublic: boolean
+        isPublic: boolean,
+        prompt?: string,
+        artStyle?: string,
+        colorTone?: string
     ) => Promise<void>
     setFilter: (filter: Partial<FilterOptions>) => void
     resetFilters: () => void
@@ -164,7 +167,7 @@ export const useGalleryStore = create<GalleryStore>((set, get) => ({
         }
     },
 
-    deleteImage: async (imageId: string) => {
+    deleteImage: async (imageId: number) => {
         try {
             set({ isLoading: true, error: null })
 
@@ -194,7 +197,14 @@ export const useGalleryStore = create<GalleryStore>((set, get) => ({
         }
     },
 
-    updateImage: async (imageId: string, tags: string[], isPublic: boolean) => {
+    updateImage: async (
+        imageId: number, 
+        tags: string[], 
+        isPublic: boolean,
+        prompt?: string,
+        artStyle?: string,
+        colorTone?: string
+    ) => {
         try {
             set({ isLoading: true, error: null })
 
@@ -203,7 +213,13 @@ export const useGalleryStore = create<GalleryStore>((set, get) => ({
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ tags, isPublic })
+                body: JSON.stringify({ 
+                    tags, 
+                    isPublic,
+                    ...(prompt !== undefined && { prompt }),
+                    ...(artStyle !== undefined && { artStyle }),
+                    ...(colorTone !== undefined && { colorTone })
+                })
             })
 
             if (!response.ok) {
@@ -212,10 +228,12 @@ export const useGalleryStore = create<GalleryStore>((set, get) => ({
 
             const { image } = await response.json()
 
-            // 성공적으로 업데이트된 경우 로컬 상태 즉시 업데이트
+            console.log('이미지 업데이트 성공:', image)
+
+            // 서버에서 반환된 업데이트된 이미지 데이터로 로컬 상태 업데이트
             const { images, filteredImages } = get()
             const updateImages = (imgs: IGalleryImage[]) =>
-                imgs.map(img => (img.id === imageId ? { ...img, tags, isPublic } : img))
+                imgs.map(img => (img.id === imageId ? { ...img, ...image } : img))
 
             set({
                 images: updateImages(images),
@@ -224,6 +242,7 @@ export const useGalleryStore = create<GalleryStore>((set, get) => ({
 
             return image
         } catch (error) {
+            console.error('이미지 업데이트 오류:', error)
             set({
                 error:
                     error instanceof Error

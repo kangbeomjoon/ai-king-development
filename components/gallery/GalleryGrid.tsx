@@ -75,7 +75,7 @@ export default function GalleryGrid() {
     }, [])
 
     const handleDeleteClick = useCallback(
-        async (imageId: string) => {
+        async (imageId: number) => {
             if (window.confirm('이미지를 삭제하시겠습니까?')) {
                 await deleteImage(imageId)
             }
@@ -128,7 +128,7 @@ export default function GalleryGrid() {
             {/* 공유 모달 */}
             {shareImage && (
                 <ShareModal
-                    imageId={shareImage.id}
+                    imageId={shareImage?.id}
                     isOpen={isShareModalOpen}
                     onClose={() => {
                         setIsShareModalOpen(false)

@@ -53,27 +53,31 @@ export async function PATCH(
         }
 
         // 이미지 정보 업데이트
+        const updateData: any = {
+            updatedAt: new Date()
+        }
+        
+        if (body.tags !== undefined) updateData.tags = body.tags
+        if (body.isPublic !== undefined) updateData.isPublic = body.isPublic
+        if (body.prompt !== undefined) updateData.prompt = body.prompt
+        if (body.artStyle !== undefined) updateData.artStyle = body.artStyle
+        if (body.colorTone !== undefined) updateData.colorTone = body.colorTone
+        
         const updatedImage = await db
             .update(images)
-            .set({
-                tags: body.tags,
-                isPublic: body.isPublic,
-                updatedAt: new Date()
-            })
+            .set(updateData)
             .where(eq(images.id, imageId))
             .returning()
 
         return NextResponse.json<IUpdateImageResponse>({
             success: true,
             image: {
-                id: updatedImage[0].id.toString(),
+                id: updatedImage[0].id,
                 userId: updatedImage[0].userId,
-                imageUrl: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${updatedImage[0].filePath}`,
+                filePath: updatedImage[0].filePath,
                 prompt: updatedImage[0].prompt,
-                styleOptions: {
-                    artStyle: updatedImage[0].artStyle,
-                    colorTone: updatedImage[0].colorTone
-                },
+                artStyle: updatedImage[0].artStyle,
+                colorTone: updatedImage[0].colorTone,
                 tags: updatedImage[0].tags,
                 isPublic: updatedImage[0].isPublic,
                 createdAt: updatedImage[0].createdAt.toISOString(),

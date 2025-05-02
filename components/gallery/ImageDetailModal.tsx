@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { IGalleryImage } from '@/types'
 import { useState } from 'react'
+import ShareModal from './ShareModal'
 
 interface ImageDetailModalProps {
     image: IGalleryImage | null
@@ -24,6 +25,7 @@ export function ImageDetailModal({
     const { updateImage } = useGalleryStore()
     const [tags, setTags] = useState<string[]>([])
     const [newTag, setNewTag] = useState('')
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
     // 이미지가 변경될 때마다 태그 업데이트
     useEffect(() => {
@@ -60,83 +62,102 @@ export function ImageDetailModal({
     if (!image) return null
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-3xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* 이미지 섹션 */}
-                    <div className="relative aspect-square">
-                        <img
-                            src={image.imageUrl}
-                            alt={image.prompt}
-                            className="object-cover rounded-lg w-full h-full"
-                        />
-                    </div>
-
-                    {/* 정보 섹션 */}
-                    <div className="space-y-4">
-                        <div>
-                            <h3 className="font-semibold">프롬프트</h3>
-                            <p className="text-sm text-gray-600">
-                                {image.prompt}
-                            </p>
+        <>
+            <Dialog open={isOpen} onOpenChange={onClose}>
+                <DialogContent className="max-w-3xl">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* 이미지 섹션 */}
+                        <div className="relative aspect-square">
+                            <img
+                                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${image.filePath}`}
+                                alt={image.prompt}
+                                className="object-cover rounded-lg w-full h-full"
+                            />
                         </div>
 
-                        <div>
-                            <h3 className="font-semibold">스타일 옵션</h3>
-                            <p className="text-sm text-gray-600">
-                                아트 스타일: {image.styleOptions.artStyle}
-                                <br />
-                                색상 톤: {image.styleOptions.colorTone}
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 className="font-semibold">태그</h3>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {tags.map(tag => (
-                                    <span
-                                        key={tag}
-                                        className="px-2 py-1 bg-gray-100 rounded-full text-sm flex items-center gap-1"
-                                    >
-                                        {tag}
-                                        <button
-                                            onClick={() => handleRemoveTag(tag)}
-                                            className="text-gray-500 hover:text-red-500"
-                                            type="button"
-                                        >
-                                            ×
-                                        </button>
-                                    </span>
-                                ))}
+                        {/* 정보 섹션 */}
+                        <div className="space-y-4">
+                            <div>
+                                <h3 className="font-semibold">프롬프트</h3>
+                                <p className="text-sm text-gray-600">
+                                    {image.prompt}
+                                </p>
                             </div>
-                            <div className="flex gap-2 mt-2">
-                                <Input
-                                    value={newTag}
-                                    onChange={e => setNewTag(e.target.value)}
-                                    placeholder="새 태그 추가"
-                                    onKeyPress={handleKeyPress}
-                                />
-                                <Button onClick={handleAddTag} type="button">
-                                    추가
+
+                            <div>
+                                <h3 className="font-semibold">스타일 옵션</h3>
+                                <p className="text-sm text-gray-600">
+                                    아트 스타일: {image.artStyle}
+                                    <br />
+                                    색상 톤: {image.colorTone}
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold">태그</h3>
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    {tags.map(tag => (
+                                        <span
+                                            key={tag}
+                                            className="px-2 py-1 bg-gray-100 rounded-full text-sm flex items-center gap-1"
+                                        >
+                                            {tag}
+                                            <button
+                                                onClick={() => handleRemoveTag(tag)}
+                                                className="text-gray-500 hover:text-red-500"
+                                                type="button"
+                                            >
+                                                ×
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                                <div className="flex gap-2 mt-2">
+                                    <Input
+                                        value={newTag}
+                                        onChange={e => setNewTag(e.target.value)}
+                                        placeholder="새 태그 추가"
+                                        onKeyPress={handleKeyPress}
+                                    />
+                                    <Button onClick={handleAddTag} type="button">
+                                        추가
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-2 mt-4">
+                                {!image.isPublic && (
+                                    <Button 
+                                        variant="secondary"
+                                        onClick={() => setIsShareModalOpen(true)}
+                                        type="button"
+                                    >
+                                        커뮤니티에 공유
+                                    </Button>
+                                )}
+                                <Button
+                                    variant="outline"
+                                    onClick={onClose}
+                                    type="button"
+                                >
+                                    취소
+                                </Button>
+                                <Button onClick={handleSave} type="button">
+                                    저장
                                 </Button>
                             </div>
                         </div>
-
-                        <div className="flex justify-end gap-2 mt-4">
-                            <Button
-                                variant="outline"
-                                onClick={onClose}
-                                type="button"
-                            >
-                                취소
-                            </Button>
-                            <Button onClick={handleSave} type="button">
-                                저장
-                            </Button>
-                        </div>
                     </div>
-                </div>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
+            {image && isShareModalOpen && (
+                <ShareModal
+                    isOpen={isShareModalOpen}
+                    onClose={() => setIsShareModalOpen(false)}
+                    imageId={image.id}
+                    currentTags={tags}
+                />
+            )}
+        </>
     )
 }

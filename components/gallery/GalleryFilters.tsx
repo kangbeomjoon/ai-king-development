@@ -126,9 +126,9 @@ export default function GalleryFilters() {
                 <div className="flex items-center space-x-2">
                     <Switch
                         id="public-filter"
-                        checked={filters.isPublic ?? false}
+                        checked={filters.isPublic === true}
                         onCheckedChange={checked => {
-                            setFilter({ isPublic: checked })
+                            setFilter({ isPublic: checked ? true : undefined })
                         }}
                     />
                     <Label htmlFor="public-filter">공개된 이미지만 보기</Label>

@@ -106,6 +106,13 @@
 #### 1. 갤러리 이미지 관리 API
 
 - **파일 위치**: `app/api/gallery/route.ts`
+- **이미지 URL 형식**:
+  - 실제 이미지를 표시하기 위한 `imageUrl`은 다음 형식을 가집니다:
+  ```
+  ${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${filePath}
+  ```
+  - API 응답에서는 `filePath`만 제공하고, 프론트엔드에서 이 형식을 사용하여 이미지 URL을 구성해야 합니다.
+
 - **엔드포인트**:
   1. **이미지 목록 조회**
      - **HTTP 메서드**: `GET`

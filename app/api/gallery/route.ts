@@ -47,7 +47,8 @@ export async function GET(request: NextRequest) {
         if (endDate) {
             conditions.push(lte(images.createdAt, new Date(endDate)))
         }
-        if (isPublic !== null && isPublic === 'true') {
+        // isPublic 필터 적용
+        if (isPublic === 'true') {
             conditions.push(eq(images.isPublic, true))
         }
 
@@ -72,14 +73,12 @@ export async function GET(request: NextRequest) {
         // 응답 데이터 구성
         const response: IGalleryResponse = {
             images: imageList.map(img => ({
-                id: img.id.toString(),
+                id: img.id,
                 userId: img.userId,
-                imageUrl: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${img.filePath}`,
+                filePath: img.filePath,
                 prompt: img.prompt,
-                styleOptions: {
-                    artStyle: img.artStyle,
-                    colorTone: img.colorTone
-                },
+                artStyle: img.artStyle,
+                colorTone: img.colorTone,
                 tags: img.tags,
                 isPublic: img.isPublic,
                 createdAt: img.createdAt.toISOString(),

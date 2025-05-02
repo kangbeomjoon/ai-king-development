@@ -48,7 +48,7 @@ export function GalleryCard({
                     onClick={onImageClick}
                 >
                     <Image
-                        src={image.imageUrl}
+                        src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${image.filePath}`}
                         alt={image.prompt}
                         fill
                         className="object-cover"

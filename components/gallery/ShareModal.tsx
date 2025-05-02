@@ -18,7 +18,7 @@ import {
 interface ShareModalProps {
     isOpen: boolean
     onClose: () => void
-    imageId: string
+    imageId: number
     currentTags: string[]
 }
 
