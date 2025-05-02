@@ -22,17 +22,20 @@ export function ImageDetailModal({
     onClose,
     isShared = false
 }: ImageDetailModalProps) {
-    const { updateImage } = useGalleryStore()
+    const { updateImage, filteredImages } = useGalleryStore()
     const [tags, setTags] = useState<string[]>([])
     const [newTag, setNewTag] = useState('')
     const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
+    // 현재 이미지의 최신 데이터 가져오기
+    const currentImage = image ? filteredImages.find(img => img.id === image.id) || image : null
+
     // 이미지가 변경될 때마다 태그 업데이트
     useEffect(() => {
-        if (image) {
-            setTags(image.tags)
+        if (currentImage) {
+            setTags(currentImage.tags)
         }
-    }, [image])
+    }, [currentImage])
 
     const handleAddTag = () => {
         if (newTag && !tags.includes(newTag)) {
